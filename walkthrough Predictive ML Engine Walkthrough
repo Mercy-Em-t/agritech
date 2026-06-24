@@ -1,0 +1,22 @@
+# Sprint 3: Predictive ML Engine Walkthrough
+
+I have successfully scaffolded the isolated Python microservice for **Predictive Biological Routing** inside the `services/ml-engine/` directory.
+
+## What was Built
+
+### 1. `requirements.txt`
+Staged the essential Python ecosystem dependencies (`fastapi`, `confluent-kafka`, `scikit-learn`, `numpy`, `pandas`) to support the ML routing environment.
+
+### 2. `model.py` (The Brain)
+Implemented a `DecayPredictor` class using `LinearRegression` from `scikit-learn`. 
+- **The Data:** It trains on a mocked dataset mapping Temperature, Humidity, and Transit Hours to a target Decay Multiplier.
+- **The Output:** It exposes a `predict_hours_until_spoilage()` method that projects the true biological lifespan of the asset based on the actual physical conditions inside the truck, bounded safely to non-negative reality.
+
+### 3. `app.py` (The Intercept Gateway)
+Built the Python event loop that wires the ML model directly into our active architecture.
+- **Consumer:** Listens to the high-throughput `iot.telemetry.transit` stream.
+- **Inference Loop:** Pushes the live temperature and humidity metrics through the scikit-learn model to instantly calculate the `projected_ttl`.
+- **Proactive Cascade Trigger:** If the ML model calculates that the asset *will* breach the safety threshold (drop below 24 hours) BEFORE arriving at its destination, it immediately fires a `PROACTIVE_ML_DOWNGRADE` event to the `market.routing.cascade` Kafka topic.
+
+> [!SUCCESS]
+> The engine no longer waits for decay to happen. It predicts the future spoilage path based on temperature spikes and routes the asset to the B2C spot market proactively, saving the value of the crop before it physically rots.

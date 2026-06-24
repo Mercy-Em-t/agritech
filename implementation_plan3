@@ -1,0 +1,57 @@
+# Goal Description
+Execute the entirety of the `DOCUMENTATION_TASKS.md` backlog. This includes writing 17 separate technical specification documents and performing 4 major architectural tech stack migrations (Kafka, PostGIS, XState, and Event Sourcing Ledger).
+
+> [!WARNING]
+> This is a massive undertaking. Executing all these migrations and writing all these documents at once is highly complex. The tech stack migrations (especially PostGIS and Kafka) require specific local infrastructure (PostgreSQL installed with the PostGIS extension, and a running Kafka broker).
+
+## User Review Required
+
+Before we begin executing this list, we need to align on the infrastructure approach for the Tech Stack migrations.
+1. **Kafka**: Do you have a local Kafka broker running, or should I write a `docker-compose.yml` file to spin one up for local development? Alternatively, I can implement the `kafkajs` adapter but leave it pointing to a mock broker if you prefer not to use Docker.
+2. **PostGIS**: Prisma raw SQL queries for PostGIS require that your local PostgreSQL instance actually has the `postgis` extension installed. Are you currently running PostgreSQL with PostGIS installed? If not, we should also spin this up via Docker.
+
+## Open Questions
+- Do you want me to write all 17 documents in a single continuous burst, or would you prefer we tackle the Tech Stack codebase migrations first?
+- Should I create a `docker-compose.yml` to scaffold the PostGIS and Kafka infrastructure?
+
+## Proposed Changes
+
+We will tackle this in two distinct phases.
+
+### Phase 1: Infrastructure & Tech Stack Migrations
+
+We will alter the core macro-services to match the production blueprint.
+
+#### [MODIFY] `prisma/schema.prisma`
+- Remove flat balances from the `Node` model.
+- Add an append-only `LedgerJournal` model to implement Event Sourcing.
+- Convert the `geospatial_footprint` from `Json` to an `Unsupported("geometry(Polygon, 4326)")` field for PostGIS.
+
+#### [MODIFY] `packages/event-bus/index.ts`
+- Install `kafkajs`.
+- Replace the Node `EventEmitter` with a Kafka Producer/Consumer pattern wrapper.
+
+#### [MODIFY] `services/event-state-machine/index.ts`
+- Install `xstate`.
+- Refactor the custom class into a mathematically rigorous XState state machine for tracking `AssetLifecycleState`.
+
+### Phase 2: Comprehensive Documentation Suite
+
+I will generate all 17 missing Markdown files into the `docs/` directory, checking them off the `DOCUMENTATION_TASKS.md` list as we go.
+
+- **Core Guides:** API Swagger Docs, Frontend Onboarding Guide.
+- **Protocol Specs:** Offline-First Sync Strategy, Immutable Audit API Payload Specs, Turn-by-Turn Routing Docs, M-Pesa Integration Protocol, AES-256 Encryption Guidelines, Append-Only Journal Specs.
+- **Exception Runbooks:** Low Local Density Fallback, Asset Degradation Re-Calculation, Escrow Invalidation, Out-of-Network Spend Attempts.
+- **Use Cases:** Offline-First Yield Sync Recovery, Institutional Cryptographic Audit Log Generation, Dynamic Logistics Bounty Adjustment, Multi-Tenant Ledger Settlement.
+
+---
+
+## Verification Plan
+
+### Automated Tests
+- We will run `npx tsc --noEmit` across all workspaces to verify that the Kafka, XState, and Prisma refactors are type-safe.
+- We will regenerate the Prisma client using `npx prisma generate`.
+
+### Manual Verification
+- We will verify that all 21 items in `DOCUMENTATION_TASKS.md` have been checked off (`[x]`).
+- You will need to spin up the local Docker environment (if approved) to test the PostGIS spatial queries.

@@ -1,0 +1,9 @@
+{
+  "name": "@agritech/event-bus",
+  "version": "1.0.0",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "dependencies": {
+    "@agritech/types": "*"
+  }
+}

@@ -1,0 +1,26 @@
+# Sprint 6: AWS Terraform Automation Walkthrough
+
+The CoinOS Production infrastructure is completely codified! By executing this **Infrastructure as Code (IaC)**, we eliminate the human error of manually clicking around the AWS Console. 
+
+## What Was Configured (`infrastructure/main.tf`)
+
+### 1. Network Security (The VPC)
+I scaffolded a high-availability Virtual Private Cloud (VPC) spanning two Availability Zones (`eu-west-1a` and `eu-west-1b`). Crucially, I restricted the Kafka Event Bus and the PostgreSQL Database to **Private Subnets**. This means it is physically impossible to access your database or event streams from the public internet; they can only be communicated with by our internal ECS containers.
+
+### 2. Aurora PostgreSQL Serverless v2
+Instead of a static RDS instance, I scripted an **Aurora Serverless v2** cluster. This is huge for agricultural markets where harvest season spikes load unpredictably. The database will automatically scale up to 64 ACUs during high traffic, and spin down to 0.5 ACUs when the market sleeps, saving you thousands in server costs. It also natively supports the PostGIS extension needed for our Proximity Matcher.
+
+### 3. Amazon MSK Serverless
+I replaced our local docker-compose Kafka setup with an **Amazon Managed Streaming for Apache Kafka (MSK)** Serverless block. This ensures that even if millions of IoT telemetry endpoints are streaming temperature data simultaneously, the cluster will expand elastically without breaking.
+
+### 4. ECS Fargate Cluster
+I scaffolded the Elastic Container Service (ECS) shell. Once you run this Terraform file, the GitHub Actions pipeline (`deploy.yml`) we built in Sprint 5 will push your compiled multi-stage Node.js and Python Docker containers directly into this Fargate serverless cluster.
+
+> [!TIP]
+> **How to Deploy:**
+> Once you have installed the AWS CLI and Terraform on your local machine, simply run:
+> 1. `cd infrastructure`
+> 2. `terraform init`
+> 3. `terraform apply`
+> 
+> Terraform will then reach out to AWS and instantly build this entire enterprise architecture for you.

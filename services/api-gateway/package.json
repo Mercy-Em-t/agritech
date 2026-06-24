@@ -1,0 +1,14 @@
+{
+  "name": "@agritech/api-gateway",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "express": "*",
+    "body-parser": "*",
+    "cors": "*",
+    "@agritech/types": "*",
+    "@agritech/event-bus": "*",
+    "@agritech/topology-directory": "*",
+    "@agritech/intake-api": "*"
+  }
+}

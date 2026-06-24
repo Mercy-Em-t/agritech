@@ -1,0 +1,35 @@
+name: 🚀 CoinOS Production Cluster Deploy
+
+on:
+  push:
+    branches: [ main ] # Triggers instantly when code hits the stable production branch
+
+jobs:
+  verify_and_push:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out source repository
+      uses: actions/checkout@v3
+
+    - name: Run Regression Testing Suite
+      run: |
+        npm install
+        npm run test # Guarantees CRDT and IoT decay modules pass cleanly before building
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-west-1 # Nairobi proximal premium cloud region
+
+    - name: Build and Push Node API Container
+      run: |
+        docker build -t coinos-core:latest .
+        aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com
+        docker tag coinos-core:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com/coinos-core:v1.2.0
+        docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com/coinos-core:v1.2.0
+
+    - name: Force Rolling Update to Container Cluster
+      run: |
+        aws ecs update-service --cluster coinos-production-cluster --service coinos-core-service --force-new-deployment

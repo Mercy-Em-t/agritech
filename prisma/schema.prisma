@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Node {
+  node_id               String   @id @default(uuid()) @db.Uuid
+  legal_name            String
+  verified              Boolean  @default(false)
+  created_at            DateTime @default(now())
+  
+  // PostGIS geometry type cannot be natively typed in Prisma schema perfectly yet, 
+  // but we store it as an unsupported type for true spatial indexing
+  geospatial_footprint  Unsupported("geometry(Polygon, 4326)")?
+  
+  // Capabilities mapped directly from the JSON schema
+  can_produce_seedlings   Boolean @default(false)
+  can_cultivate_crops     Boolean @default(false)
+  can_process_extracts    Boolean @default(false)
+  can_manufacture_compost Boolean @default(false)
+  can_provide_logistics   Boolean @default(false)
+
+  // Ledger details
+  wallet_address        String   @unique
+  // Balances are now derived via the LedgerJournal (Event Sourcing)
+
+  // Relations
+  assets                Asset[]
+  vouchers              CreditVoucher[]
+  ledger_entries        LedgerJournal[]
+}
+
+model Asset {
+  asset_id        String   @id @default(uuid()) @db.Uuid
+  origin_node_id  String   @db.Uuid
+  
+  commodity       String
+  initial_grade   String
+  quantity_kg     Float
+  harvest_at      DateTime
+  spoilage_at     DateTime
+
+  current_tier    Int      @default(1)
+  active_buyer_id String?  @db.Uuid
+  cluster_id      String?  @db.Uuid
+
+  origin_node     Node     @relation(fields: [origin_node_id], references: [node_id])
+}
+
+model CreditVoucher {
+  voucher_id             String   @id @default(uuid()) @db.Uuid
+  issued_to_node_id      String   @db.Uuid
+  amount                 Float
+  locked_contract_id     String   @db.Uuid
+  usable_at_capabilities String[]
+
+  issued_to_node         Node     @relation(fields: [issued_to_node_id], references: [node_id])
+}
+
+model LedgerJournal {
+  entry_id               String   @id @default(uuid()) @db.Uuid
+  node_id                String   @db.Uuid
+  transaction_type       String   // e.g., 'CREDIT_MINTED', 'EDGE_FEE_DEDUCTED', 'ESCROW_LOCKED'
+  amount                 Float
+  currency               String   @default("USD") // Can also be 'VOUCHER'
+  created_at             DateTime @default(now())
+  idempotency_key        String   @unique
+
+  node                   Node     @relation(fields: [node_id], references: [node_id])
+}

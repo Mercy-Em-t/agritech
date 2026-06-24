@@ -1,0 +1,56 @@
+:root {
+  --bg-dark: #07090F;
+  --bg-panel: rgba(15, 20, 35, 0.6);
+  --border-glow: rgba(0, 255, 163, 0.2);
+  --accent-green: #00FFA3;
+  --accent-blue: #00D4FF;
+  --text-primary: #FFFFFF;
+  --text-secondary: #8B949E;
+  
+  --glass-blur: blur(12px);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.05);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(circle at 15% 50%, rgba(0, 255, 163, 0.05), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(0, 212, 255, 0.05), transparent 25%);
+}
+
+/* Base Glass Panel Class */
+.glass-panel {
+  background: var(--bg-panel);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  border-radius: 16px;
+  box-shadow: var(--glass-shadow);
+  padding: 24px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-panel:hover {
+  border-color: var(--border-glow);
+  box-shadow: 0 8px 32px 0 rgba(0, 255, 163, 0.05);
+}
+
+h1, h2, h3 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.mono {
+  font-family: 'JetBrains Mono', monospace;
+}

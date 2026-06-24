@@ -1,0 +1,9 @@
+{
+  "name": "@agritech/logistics-engine",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "@agritech/types": "*",
+    "@agritech/event-bus": "*"
+  }
+}

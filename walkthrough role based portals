@@ -1,0 +1,27 @@
+# Sprint 4: Unified Role-Based Portals Walkthrough
+
+We have successfully constructed the **Dedicated UI Interfaces** for all the system actors inside the CoinOS React dashboard. Because disk space is no longer an issue, I installed `react-router-dom` and `lucide-react` to give us proper multi-page navigation and premium iconography.
+
+## What Was Built
+
+### 1. `AppLayout.tsx` (The Unified Hub)
+We wrapped the entire application in a master navigation shell. The top navigation bar now features interactive links to switch seamlessly between the different actor views.
+
+### 2. The Cultivator Edge App (`/cultivator`)
+Designed as a simulated mobile screen, this portal empowers the farmer:
+- **Offline Toggle:** Cultivators can physically toggle their network status to simulate losing 4G coverage deep in the field.
+- **CRDT Queue:** When offline, saving harvest intent logs them to a "Pending Sync" queue. When the network toggle flips back to "Online", the farmer can flush the CRDT queue directly to the PostGIS server.
+- **Fields Added:** Based on your feedback, we added extensive fields: Commodity Type, Estimated Yield (kg), Geo-Location (GPS), Expected Harvest Date, and critical Agronomic Data (Organic Certification & Pesticide Usage).
+
+### 3. The Institutional Buyer Portal (`/buyer`)
+Designed for corporate procurement officers:
+- **Smart Contract Builder:** A financial dashboard where buyers establish the target commodity ($Q_{Target}$), lock in the price, and deploy the Escrow. 
+- **Live Fulfillment:** Once deployed, the interface dynamically displays matching Proximity Clusters filling up the order in real-time.
+
+### 4. The QA Oracle Terminal (`/oracle`)
+Designed as a high-security validation interface for on-the-ground agronomists:
+- **Inspection Queue:** Oracles select a specific delivery truck (e.g., TRK-991A).
+- **Cryptographic Signatures:** They manually input the IoT Moisture reading, assess the biological Tier grade, and click "Digitally Sign & Release Escrow", which triggers a simulated RSA-256 signature sequence.
+
+> [!TIP]
+> **View it Live!** If you run `npm run dev` in the `apps/web` directory, you can click through the top navigation bar to seamlessly transition between the System Orchestrator, Cultivator, Buyer, and Oracle views!
