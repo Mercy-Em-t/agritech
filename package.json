@@ -24,6 +24,9 @@
     "@types/express": "^5.0.6",
     "body-parser": "^2.3.0",
     "cors": "^2.8.6",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "kafkajs": "^2.2.4",
+    "xstate": "^4.38.3",
+    "axios": "^1.7.2"
   }
 }

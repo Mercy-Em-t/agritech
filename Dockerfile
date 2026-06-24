@@ -8,6 +8,7 @@ COPY . .
 RUN npm install
 
 # Compile
+RUN npx prisma generate
 RUN npm run build
 
 # Remove devDependencies to shrink the image size
