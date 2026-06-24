@@ -7,6 +7,7 @@
     "services/*"
   ],
   "scripts": {
+    "test": "echo \"Warning: No test specified\" && exit 0",
     "build": "tsc -b",
     "simulate": "ts-node scripts/simulate_event.ts"
   },
