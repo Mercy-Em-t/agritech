@@ -11,7 +11,7 @@ COPY . .
 RUN npm install
 
 # Compile
-RUN DATABASE_URL="postgresql://dummy:dummy@localhost/dummy" npx prisma generate
+RUN npx prisma generate
 RUN npm run build
 
 # Remove devDependencies to shrink the image size

@@ -14,12 +14,12 @@
   "devDependencies": {
     "@types/events": "^3.0.3",
     "@types/node": "^20.19.43",
-    "prisma": "^7.8.0",
+    "prisma": "^5.22.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@prisma/client": "^7.8.0",
+    "@prisma/client": "^5.22.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "body-parser": "^2.3.0",
