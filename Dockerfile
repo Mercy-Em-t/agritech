@@ -1,5 +1,5 @@
 # --- STAGE 1: Build TypeScript to JavaScript ---
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 
 WORKDIR /usr/src/app
 
@@ -15,7 +15,7 @@ RUN npm run build
 RUN npm prune --omit=dev
 
 # --- STAGE 2: Production Container ---
-FROM node:18-alpine AS production
+FROM node:20-alpine AS production
 
 WORKDIR /usr/src/app
 
