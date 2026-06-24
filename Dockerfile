@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 
 # Copy source and install all dependencies
 COPY . .
-RUN npm ci
+RUN npm install
 
 # Compile
 RUN npm run build
