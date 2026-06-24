@@ -30,6 +30,6 @@ jobs:
         docker tag coinos-core:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-north-1.amazonaws.com/coinos-core:v1.2.0
         docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-north-1.amazonaws.com/coinos-core:v1.2.0
 
-    - name: Force Rolling Update to Container Cluster
-      run: |
-        aws ecs update-service --cluster coinos-production-cluster --service coinos-core-service --force-new-deployment
+    # - name: Force Rolling Update to Container Cluster
+    #   run: |
+    #     aws ecs update-service --cluster coinos-production-cluster --service coinos-core-service --force-new-deployment
