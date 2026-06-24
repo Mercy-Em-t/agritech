@@ -3,6 +3,9 @@ FROM node:20-alpine AS builder
 
 WORKDIR /usr/src/app
 
+# Install openssl for Prisma
+RUN apk add --no-cache openssl
+
 # Copy source and install all dependencies
 COPY . .
 RUN npm install
@@ -18,6 +21,9 @@ RUN npm prune --omit=dev
 FROM node:20-alpine AS production
 
 WORKDIR /usr/src/app
+
+# Install openssl for Prisma runtime
+RUN apk add --no-cache openssl
 
 # Copy pruned node_modules and compiled code from builder
 COPY --from=builder /usr/src/app/node_modules ./node_modules
