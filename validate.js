@@ -1,6 +1,6 @@
 const { execSync } = require('child_process');
 try {
-  execSync('npx prisma validate', { stdio: 'inherit', env: { ...process.env, DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy" }});
+  execSync('npx prisma@5.22.0 validate', { stdio: 'inherit', env: { ...process.env, DATABASE_URL: "" }});
 } catch (e) {
   console.log("Failed");
 }

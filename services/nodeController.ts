@@ -49,7 +49,8 @@ export const registerPolymorphicNode = async (req: Request, res: Response): Prom
         data: {
           node_id: node.node_id,
           transaction_type: 'NODE_INITIALIZATION',
-          amount: 0.0000
+          amount: 0.0000,
+          idempotency_key: `init_${node.node_id}`
         }
       });
 
